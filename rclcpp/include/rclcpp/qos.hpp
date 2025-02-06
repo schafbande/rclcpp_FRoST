@@ -73,6 +73,22 @@ enum class QoSCompatibility
   Error = RMW_QOS_COMPATIBILITY_ERROR,
 };
 
+// ===================================================
+/*
+* FRoST Implementation of Ownership QoS
+* -------------------------------------
+* ownership kind implemented
+* TODO: check, how/if ownership strength is to be implemented
+*/
+enum class OwnershipPolicy
+{
+  Shared = RMW_QOS_POLICY_OWNERSHIP_SHARED,
+  Exclusive = RMW_QOS_POLICY_OWNERSHIP_EXCLUSIVE,
+  SystemDefault = RMW_QOS_POLICY_OWNERSHIP_SYSTEM_DEFAULT,
+  Unknown = RMW_QOS_POLICY_OWNERSHIP_UNKNOWN,
+};
+// ===================================================
+
 /// QoS initialization values, cannot be created directly, use KeepAll or KeepLast instead.
 struct RCLCPP_PUBLIC QoSInitialization
 {
@@ -101,6 +117,16 @@ struct RCLCPP_PUBLIC KeepLast : public rclcpp::QoSInitialization
 {
   explicit KeepLast(size_t depth, bool print_depth_warning = true);
 };
+
+  // ===================================================
+  /*
+  * FRoST Implementation of Ownership QoS
+  * -------------------------------------
+  * is an initialisation of Ownership QoS necessary?
+  */
+
+  // ===================================================
+
 
 /// Encapsulation of Quality of Service settings.
 /**
@@ -247,6 +273,22 @@ public:
   /// Set the avoid_ros_namespace_conventions setting.
   QoS &
   avoid_ros_namespace_conventions(bool avoid_ros_namespace_conventions);
+
+// ===================================================
+/*
+ * FRoST Implementation of Ownership QoS
+ * -------------------------------------
+ * implement ownership   
+ */
+  /// Set the Ownership type.
+  QoS &
+  ownership(rmw_qos_ownership_policy_t ownership);
+
+  /// Set the Ownership Strength
+  size_t
+  ownership_strength() const;
+
+// ===================================================
 
   /// Get the history qos policy.
   HistoryPolicy

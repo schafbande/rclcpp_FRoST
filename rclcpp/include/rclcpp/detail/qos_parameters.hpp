@@ -44,6 +44,11 @@ struct PublisherQosParametersTraits
   static constexpr const char * entity_type() {return "publisher";}
   static constexpr auto allowed_policies()
   {
+    // ===================================================
+    /*
+    * FRoST Implementation of Ownership QoS
+    * -------------------------------------
+    *  
     return std::array<::rclcpp::QosPolicyKind, 9> {
       QosPolicyKind::AvoidRosNamespaceConventions,
       QosPolicyKind::Deadline,
@@ -55,6 +60,20 @@ struct PublisherQosParametersTraits
       QosPolicyKind::LivelinessLeaseDuration,
       QosPolicyKind::Reliability,
     };
+    */
+    return std::array<::rclcpp::QosPolicyKind, 11> {
+      QosPolicyKind::AvoidRosNamespaceConventions,
+      QosPolicyKind::Deadline,
+      QosPolicyKind::Durability,
+      QosPolicyKind::History,
+      QosPolicyKind::Depth,
+      QosPolicyKind::Lifespan,
+      QosPolicyKind::Liveliness,
+      QosPolicyKind::LivelinessLeaseDuration,
+      QosPolicyKind::Reliability,
+      QosPolicyKind::Ownership,
+      QosPolicyKind::OwnershipStrength,
+    };
   }
 };
 
@@ -64,7 +83,23 @@ struct SubscriptionQosParametersTraits
   static constexpr const char * entity_type() {return "subscription";}
   static constexpr auto allowed_policies()
   {
-    return std::array<::rclcpp::QosPolicyKind, 8> {
+    // ===================================================
+    /*
+    * FRoST Implementation of Ownership QoS
+    * -------------------------------------
+    * 
+    * return std::array<::rclcpp::QosPolicyKind, 8> {
+        QosPolicyKind::AvoidRosNamespaceConventions,
+        QosPolicyKind::Deadline,
+        QosPolicyKind::Durability,
+        QosPolicyKind::History,
+        QosPolicyKind::Depth,
+        QosPolicyKind::Liveliness,
+        QosPolicyKind::LivelinessLeaseDuration,
+        QosPolicyKind::Reliability,
+    };
+    */  
+    return std::array<::rclcpp::QosPolicyKind, 9> {
       QosPolicyKind::AvoidRosNamespaceConventions,
       QosPolicyKind::Deadline,
       QosPolicyKind::Durability,
@@ -73,6 +108,7 @@ struct SubscriptionQosParametersTraits
       QosPolicyKind::Liveliness,
       QosPolicyKind::LivelinessLeaseDuration,
       QosPolicyKind::Reliability,
+      QosPolicyKind::Ownership,
     };
   }
 };
@@ -267,6 +303,22 @@ apply_qos_override(
       RCLCPP_DETAIL_APPLY_QOS_OVERRIDE_FROM_PARAMETER_STRING(
         reliability, RELIABILITY, value, qos);
       break;
+    // ===================================================
+    /*
+    * FRoST Implementation of Ownership QoS
+    * -------------------------------------
+    *
+    */
+    // inspired by the other Policies
+    case QosPolicyKind::Ownership:
+      RCLCPP_DETAIL_APPLY_QOS_OVERRIDE_FROM_PARAMETER_STRING(
+        ownership, OWNERSHIP, value, qos);
+      break;
+    // inspired by the depth Policy (line 253)
+    case QosPolicyKind::Ownership_Strength:
+        qos.get_rmw_qos_profile().ownership_strength = static_cast<size_t>(value.get<int64_t>());
+      break;
+    // ===================================================
     default:
       throw std::invalid_argument{"unknown QosPolicyKind"};
   }
@@ -329,6 +381,21 @@ get_default_qos_param_value(rclcpp::QosPolicyKind kind, const rclcpp::QoS & qos)
       return ParameterValue(
         check_if_stringified_policy_is_null(
           rmw_qos_reliability_policy_to_str(rmw_qos.reliability), kind));
+    
+    // ===================================================
+    /*
+    * FRoST Implementation of Ownership QoS
+    * -------------------------------------
+    *  
+    */
+    case QosPolicyKind::Ownership:
+      return ParameterValue(
+        check_if_stringified_policy_is_null(
+          rmw_qos_ownership_policy_to_str(rmw_qos.ownership), kind));
+    case QosPolicyKind::OwnershipStrength:
+      return ParameterValue(static_cast<int64_t>(rmw_qos.ownership_strength));
+   // ===================================================
+
     default:
       throw std::invalid_argument{"unknown QoS policy kind"};
   }

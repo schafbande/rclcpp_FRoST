@@ -43,6 +43,15 @@ enum class RCLCPP_PUBLIC_TYPE QosPolicyKind
   LivelinessLeaseDuration = RMW_QOS_POLICY_LIVELINESS_LEASE_DURATION,
   Reliability = RMW_QOS_POLICY_RELIABILITY,
   Invalid = RMW_QOS_POLICY_INVALID,
+  // ===================================================
+/*
+ * FRoST Implementation of Ownership QoS
+ * -------------------------------------
+ * 
+ */
+  Ownership = RMW_QOS_POLICY_OWNERSHIP,
+  OwnershipStrength = RMW_QOS_POLICY_OWNERSHIP_STRENGTH,
+// ===================================================
 };
 
 RCLCPP_PUBLIC

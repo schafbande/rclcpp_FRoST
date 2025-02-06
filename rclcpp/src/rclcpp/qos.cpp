@@ -40,6 +40,18 @@ std::string qos_policy_name_from_kind(rmw_qos_policy_kind_t policy_kind)
       return "HISTORY_QOS_POLICY";
     case RMW_QOS_POLICY_LIFESPAN:
       return "LIFESPAN_QOS_POLICY";
+    // ===================================================
+    /*
+    * FRoST Implementation of Ownership QoS
+    * -------------------------------------
+    * ownership kind implemented
+    * TODO: check, how/if ownership strength is to be implemented
+    */
+    case RMW_QOS_POLICY_OWNERSHIP:
+      return "OWNERSHIP_QOS_POLICY";
+    case RMW_QOS_POLICY_OWNERSHIP_STRENGTH:
+      return "OWNERSHIP_STRENGTH_POLICY";
+    // ===================================================
     default:
       return "INVALID_QOS_POLICY";
   }
@@ -316,6 +328,23 @@ QoS::avoid_ros_namespace_conventions() const
   return rmw_qos_profile_.avoid_ros_namespace_conventions;
 }
 
+// ===================================================
+/*
+* FRoST Implementation of Ownership QoS
+* -------------------------------------
+*/
+  
+OwnershipPolicy
+QoS::ownership() const
+{
+  return static_cast<OwnershipPolicy>(rmw_qos_profile_.ownership);
+}
+
+size_t
+QoS::ownership_strength() const {return rmw_qos_profile_.ownership_strength;}
+
+// ===================================================
+
 namespace
 {
 /// Check if two rmw_time_t have the same values.
@@ -337,7 +366,19 @@ bool operator==(const QoS & left, const QoS & right)
          pl.lifespan == pr.lifespan &&
          pl.liveliness == pr.liveliness &&
          pl.liveliness_lease_duration == pr.liveliness_lease_duration &&
-         pl.avoid_ros_namespace_conventions == pr.avoid_ros_namespace_conventions;
+          // ===================================================
+          /*
+          * FRoST Implementation of Ownership QoS
+          * -------------------------------------
+          */
+         //keep this line if FRoST fails
+         //pl.avoid_ros_namespace_conventions == pr.avoid_ros_namespace_conventions;
+
+         //Frost implementation
+         pl.avoid_ros_namespace_conventions == pr.avoid_ros_namespace_conventions &&
+         pl.ownership == pr.ownership &&
+         pl.ownership_strength == pr.ownership_strength;
+         // ===================================================
 }
 
 bool operator!=(const QoS & left, const QoS & right)
