@@ -307,7 +307,7 @@ apply_qos_override(
     /*
     * FRoST Implementation of Ownership QoS
     * -------------------------------------
-    *
+    * //TODO: fix compile error 'undefinded reference'
     */
     // inspired by the other Policies
     case QosPolicyKind::Ownership:
@@ -315,7 +315,7 @@ apply_qos_override(
         ownership, OWNERSHIP, value, qos);
       break;
     // inspired by the depth Policy (line 253)
-    case QosPolicyKind::Ownership_Strength:
+    case QosPolicyKind::OwnershipStrength:
         qos.get_rmw_qos_profile().ownership_strength = static_cast<size_t>(value.get<int64_t>());
       break;
     // ===================================================

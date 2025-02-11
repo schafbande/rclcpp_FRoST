@@ -284,6 +284,9 @@ public:
   QoS &
   ownership(rmw_qos_ownership_policy_t ownership);
 
+  QoS &
+  ownership(OwnershipPolicy ownership);
+
   /// Set the Ownership Strength
   size_t
   ownership_strength() const;
@@ -325,6 +328,17 @@ public:
   /// Get the `avoid ros namespace convention` setting.
   bool
   avoid_ros_namespace_conventions() const;
+
+  // ===================================================
+  /*
+  * FRoST Implementation of Ownership QoS
+  * -------------------------------------
+  * implement ownership   
+  */
+  /// Get the "ownership" setting
+  OwnershipPolicy
+  ownership() const;
+  // ===================================================
 
 private:
   rmw_qos_profile_t rmw_qos_profile_;
