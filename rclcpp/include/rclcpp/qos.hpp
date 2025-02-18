@@ -290,7 +290,6 @@ public:
   /// Set the Ownership Strength
   size_t
   ownership_strength() const;
-
 // ===================================================
 
   /// Get the history qos policy.
@@ -337,7 +336,7 @@ public:
   */
   /// Get the "ownership" setting
   OwnershipPolicy
-  ownership() const;
+  ownership() const;  
   // ===================================================
 
 private:

@@ -340,6 +340,22 @@ QoS::ownership() const
   return static_cast<OwnershipPolicy>(rmw_qos_profile_.ownership);
 }
 
+QoS &
+QoS::ownership(rmw_qos_ownership_policy_t ownership)
+{
+  rmw_qos_profile_.ownership = ownership;
+  return *this;
+}
+
+QoS &
+QoS::ownership(OwnershipPolicy ownership)
+{
+  rmw_qos_profile_.ownership = static_cast<rmw_qos_ownership_policy_t>(ownership);
+  return *this;
+}
+
+//TODO: check, if this fits.
+// Ownership Strength might be a separate QoS, NOT like history.depth
 size_t
 QoS::ownership_strength() const {return rmw_qos_profile_.ownership_strength;}
 

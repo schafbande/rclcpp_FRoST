@@ -3173,7 +3173,16 @@ TEST_F(TestNode, get_publishers_subscriptions_info_by_topic) {
     {20, 9887665},
     RMW_QOS_POLICY_LIVELINESS_MANUAL_BY_TOPIC,
     {5, 23456},
-    false
+    false,
+    // ===================================================
+    /*
+    * FRoST Implementation of Ownership QoS
+    * -------------------------------------
+    * declare default values for ownership members
+    */
+   RMW_QOS_POLICY_OWNERSHIP_SHARED, //shared ownership (everyone may publish)
+   0                                //no strength since shared ownership
+   // ===================================================
   };
   rclcpp::QoS qos = rclcpp::QoS(qos_initialization, rmw_qos_profile_default);
   auto publisher = node->create_publisher<test_msgs::msg::BasicTypes>(topic_name, qos);
@@ -3213,7 +3222,16 @@ TEST_F(TestNode, get_publishers_subscriptions_info_by_topic) {
     {29, 2345},
     RMW_QOS_POLICY_LIVELINESS_AUTOMATIC,
     {5, 23456},
-    false
+    false,
+    // ===================================================
+    /*
+    * FRoST Implementation of Ownership QoS
+    * -------------------------------------
+    * declare default values for ownership members
+    */
+    RMW_QOS_POLICY_OWNERSHIP_SYSTEM_DEFAULT, //default (subscriber)
+    0                                //no strength since subscriber
+   // ===================================================
   };
   rclcpp::QoS qos2 = rclcpp::QoS(qos_initialization2, rmw_qos_profile_default2);
   auto callback = [](test_msgs::msg::BasicTypes::ConstSharedPtr msg) {
